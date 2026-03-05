@@ -7,6 +7,8 @@ async function init() {
   camera = new Camera(document.getElementById('viewfinder'));
   gallery = new Gallery(storage, document.getElementById('gallery-view'));
 
+  setupEventListeners();
+
   try {
     await camera.start();
   } catch (err) {
@@ -16,7 +18,6 @@ async function init() {
   }
 
   await loadLabels();
-  setupEventListeners();
 }
 
 async function loadLabels() {
@@ -142,15 +143,15 @@ async function createNewLabel() {
 }
 
 function showGallery() {
-  document.getElementById('camera-view').hidden = true;
-  document.getElementById('gallery-view').hidden = false;
+  document.getElementById('camera-view').classList.add('view-hidden');
+  document.getElementById('gallery-view').classList.remove('view-hidden');
   gallery.load(gallery.currentLabel);
   loadLabels();
 }
 
 function showCamera() {
-  document.getElementById('gallery-view').hidden = true;
-  document.getElementById('camera-view').hidden = false;
+  document.getElementById('gallery-view').classList.add('view-hidden');
+  document.getElementById('camera-view').classList.remove('view-hidden');
 }
 
 function flashMessage(msg) {
