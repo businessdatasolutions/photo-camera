@@ -50,19 +50,19 @@ In Supabase Dashboard > Storage:
 3. Add a storage policy to allow anonymous uploads:
 
 ```sql
-create policy "Allow anonymous uploads"
+create policy "Allow authenticated uploads"
 on storage.objects for insert
-to anon
+to authenticated
 with check (bucket_id = 'photos');
 
-create policy "Allow anonymous reads"
+create policy "Allow authenticated reads"
 on storage.objects for select
-to anon
+to authenticated
 using (bucket_id = 'photos');
 
-create policy "Allow anonymous deletes"
+create policy "Allow authenticated deletes"
 on storage.objects for delete
-to anon
+to authenticated
 using (bucket_id = 'photos');
 ```
 
@@ -72,12 +72,18 @@ using (bucket_id = 'photos');
 alter table photos enable row level security;
 alter table labels enable row level security;
 
-create policy "Allow anonymous access to photos"
-on photos for all to anon using (true) with check (true);
+create policy "Allow authenticated access to photos"
+on photos for all to authenticated using (true) with check (true);
 
-create policy "Allow anonymous access to labels"
-on labels for all to anon using (true) with check (true);
+create policy "Allow authenticated access to labels"
+on labels for all to authenticated using (true) with check (true);
 ```
+
+> **Note:** If upgrading from anonymous access, drop the old policies first:
+> ```sql
+> drop policy "Allow anonymous access to photos" on photos;
+> drop policy "Allow anonymous access to labels" on labels;
+> ```
 
 ### 5. Configure the app
 

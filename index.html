@@ -10,6 +10,20 @@
 </head>
 <body>
 
+  <!-- Login View -->
+  <div id="login-view">
+    <div class="login-card">
+      <h1>Photo Camera</h1>
+      <form id="login-form">
+        <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+        <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
+        <button type="submit" id="login-btn">Sign In</button>
+        <button type="button" id="signup-btn">Create Account</button>
+        <div id="auth-error" hidden></div>
+      </form>
+    </div>
+  </div>
+
   <!-- Camera View -->
   <div id="camera-view">
     <video id="viewfinder" autoplay playsinline muted></video>
@@ -23,6 +37,7 @@
       <div class="spacer"></div>
       <button class="icon-btn" id="switch-cam-btn" title="Switch camera">&#x21C5;</button>
       <button class="icon-btn" id="gallery-btn" title="Gallery">&#x25A6;</button>
+      <button class="icon-btn" id="signout-btn" title="Sign out">&#x23FB;</button>
     </div>
 
     <div id="new-label-form" hidden>
@@ -66,6 +81,7 @@
 
   <!-- App -->
   <script src="config.js"></script>
+  <script src="auth.js"></script>
   <script src="camera.js"></script>
   <script src="storage.js"></script>
   <script src="gallery.js"></script>

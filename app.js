@@ -1,13 +1,83 @@
-let camera, storage, gallery;
+let camera, storage, gallery, auth;
 let currentLabel = null;
 let sessionCount = 0;
 
 async function init() {
-  storage = new Storage();
-  camera = new Camera(document.getElementById('viewfinder'));
-  gallery = new Gallery(storage, document.getElementById('gallery-view'));
+  auth = new Auth();
 
-  setupEventListeners();
+  setupLoginListeners();
+
+  const session = await auth.getSession();
+  if (session) {
+    await startApp();
+  } else {
+    showLogin();
+  }
+
+  auth.onAuthStateChange((event) => {
+    if (event === 'SIGNED_OUT') {
+      showLogin();
+    }
+  });
+}
+
+function showLogin() {
+  document.getElementById('login-view').classList.remove('view-hidden');
+  document.getElementById('camera-view').classList.add('view-hidden');
+  document.getElementById('gallery-view').classList.add('view-hidden');
+}
+
+function setupLoginListeners() {
+  const errorEl = document.getElementById('auth-error');
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.hidden = true;
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+    try {
+      await auth.signIn(email, password);
+      await startApp();
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.hidden = false;
+    }
+  });
+
+  document.getElementById('signup-btn').addEventListener('click', async () => {
+    errorEl.hidden = true;
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+    if (!email || !password) {
+      errorEl.textContent = 'Enter email and password first.';
+      errorEl.hidden = false;
+      return;
+    }
+    try {
+      const data = await auth.signUp(email, password);
+      if (data.user && !data.session) {
+        errorEl.textContent = 'Check your email to confirm your account.';
+        errorEl.hidden = false;
+      } else {
+        await startApp();
+      }
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.hidden = false;
+    }
+  });
+}
+
+async function startApp() {
+  document.getElementById('login-view').classList.add('view-hidden');
+  document.getElementById('camera-view').classList.remove('view-hidden');
+
+  if (!storage) {
+    storage = new Storage();
+    camera = new Camera(document.getElementById('viewfinder'));
+    gallery = new Gallery(storage, document.getElementById('gallery-view'));
+    setupEventListeners();
+  }
 
   try {
     await camera.start();
@@ -86,6 +156,15 @@ function setupEventListeners() {
   document.getElementById('new-label-btn').addEventListener('click', createNewLabel);
   document.getElementById('new-label-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') createNewLabel();
+  });
+
+  // Sign out
+  document.getElementById('signout-btn').addEventListener('click', async () => {
+    await auth.signOut();
+    camera.stop();
+    storage = null;
+    camera = null;
+    gallery = null;
   });
 
   // View switching
