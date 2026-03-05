@@ -31,9 +31,9 @@
 
     <div class="camera-top-bar">
       <select id="label-select">
-        <option value="" disabled selected>Select label...</option>
+        <option value="" disabled selected>Select a label...</option>
       </select>
-      <button class="icon-btn" id="add-label-btn" onclick="document.getElementById('new-label-form').hidden = !document.getElementById('new-label-form').hidden">+</button>
+      <button class="icon-btn" id="add-label-btn" title="Add new label" onclick="document.getElementById('new-label-form').hidden = !document.getElementById('new-label-form').hidden">+</button>
       <div class="spacer"></div>
       <button class="icon-btn" id="switch-cam-btn" title="Switch camera">&#x21C5;</button>
       <button class="icon-btn" id="gallery-btn" title="Gallery">&#x25A6;</button>
@@ -42,14 +42,17 @@
 
     <div id="new-label-form" hidden>
       <input type="text" id="new-label-input" placeholder="New label name...">
-      <button id="new-label-btn">Create</button>
+      <button id="new-label-btn" title="Create label">Create</button>
     </div>
 
     <div id="camera-error" hidden></div>
 
     <div class="camera-bottom-bar">
       <div id="photo-count">0 photos taken</div>
-      <button id="capture-btn" title="Capture"></button>
+      <div class="capture-row">
+        <button id="burst-toggle" title="Burst mode: capture 10 photos">10x</button>
+        <button id="capture-btn" title="Capture"></button>
+      </div>
     </div>
   </div>
 
@@ -59,10 +62,10 @@
       <button id="camera-btn" title="Back to camera">&#x2190; Camera</button>
       <h2>Gallery</h2>
       <div class="spacer"></div>
-      <button id="select-all-btn">Select All</button>
-      <button id="deselect-btn">Deselect</button>
-      <button id="download-btn">Download</button>
-      <button id="delete-btn">Delete</button>
+      <button id="select-all-btn" title="Select all photos">Select All</button>
+      <button id="deselect-btn" title="Deselect all photos">Deselect</button>
+      <button id="download-btn" title="Download selected as ZIP">Download</button>
+      <button id="delete-btn" title="Delete selected photos">Delete</button>
     </div>
     <div class="gallery-tabs" id="gallery-tabs"></div>
     <div class="gallery-grid"></div>

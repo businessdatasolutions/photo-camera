@@ -1,6 +1,9 @@
 let camera, storage, gallery, auth;
 let currentLabel = null;
 let sessionCount = 0;
+let burstMode = false;
+const BURST_COUNT = 10;
+const BURST_INTERVAL = 300;
 
 async function init() {
   auth = new Auth();
@@ -103,7 +106,7 @@ async function loadLabels() {
 function renderLabelDropdown(labels) {
   const select = document.getElementById('label-select');
   const current = select.value;
-  select.innerHTML = '<option value="" disabled>Select label...</option>';
+  select.innerHTML = '<option value="" disabled selected>Select a label...</option>';
   for (const label of labels) {
     const opt = document.createElement('option');
     opt.value = label.name;
@@ -143,6 +146,13 @@ function renderGalleryTabs(labels) {
 function setupEventListeners() {
   // Capture
   document.getElementById('capture-btn').addEventListener('click', capturePhoto);
+
+  // Burst toggle
+  document.getElementById('burst-toggle').addEventListener('click', () => {
+    burstMode = !burstMode;
+    document.getElementById('burst-toggle').classList.toggle('active', burstMode);
+    document.getElementById('capture-btn').classList.toggle('burst-active', burstMode);
+  });
 
   // Switch camera
   document.getElementById('switch-cam-btn').addEventListener('click', () => camera.switchCamera());
@@ -184,6 +194,15 @@ async function capturePhoto() {
     return;
   }
 
+  if (burstMode) {
+    await burstCapture();
+    return;
+  }
+
+  await captureSinglePhoto();
+}
+
+async function captureSinglePhoto() {
   const blob = await camera.capture();
   sessionCount++;
   document.getElementById('photo-count').textContent = `${sessionCount} photo${sessionCount !== 1 ? 's' : ''} taken`;
@@ -197,6 +216,23 @@ async function capturePhoto() {
   storage.upload(blob, currentLabel).catch(err => {
     console.error('Upload failed:', err);
   });
+}
+
+async function burstCapture() {
+  const captureBtn = document.getElementById('capture-btn');
+  const countEl = document.getElementById('photo-count');
+  captureBtn.disabled = true;
+
+  for (let i = 1; i <= BURST_COUNT; i++) {
+    countEl.textContent = `Burst ${i}/${BURST_COUNT}...`;
+    await captureSinglePhoto();
+    if (i < BURST_COUNT) {
+      await new Promise(resolve => setTimeout(resolve, BURST_INTERVAL));
+    }
+  }
+
+  countEl.textContent = `${sessionCount} photo${sessionCount !== 1 ? 's' : ''} taken`;
+  captureBtn.disabled = false;
 }
 
 async function createNewLabel() {
