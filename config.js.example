@@ -1,0 +1,9 @@
+// Supabase configuration — replace with your project values
+const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+
+// Storage bucket name
+const STORAGE_BUCKET = 'photos';
+
+// JPEG quality (0-1)
+const JPEG_QUALITY = 0.92;

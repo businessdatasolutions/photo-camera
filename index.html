@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>Photo Camera</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Camera View -->
+  <div id="camera-view">
+    <video id="viewfinder" autoplay playsinline muted></video>
+    <div id="flash"></div>
+
+    <div class="camera-top-bar">
+      <select id="label-select">
+        <option value="" disabled selected>Select label...</option>
+      </select>
+      <button class="icon-btn" id="add-label-btn" onclick="document.getElementById('new-label-form').hidden = !document.getElementById('new-label-form').hidden">+</button>
+      <div class="spacer"></div>
+      <button class="icon-btn" id="switch-cam-btn" title="Switch camera">&#x21C5;</button>
+      <button class="icon-btn" id="gallery-btn" title="Gallery">&#x25A6;</button>
+    </div>
+
+    <div id="new-label-form" hidden>
+      <input type="text" id="new-label-input" placeholder="New label name...">
+      <button id="new-label-btn">Create</button>
+    </div>
+
+    <div id="camera-error" hidden></div>
+
+    <div class="camera-bottom-bar">
+      <div id="photo-count">0 photos taken</div>
+      <button id="capture-btn" title="Capture"></button>
+    </div>
+  </div>
+
+  <!-- Gallery View -->
+  <div id="gallery-view" hidden>
+    <div class="gallery-top-bar">
+      <button id="camera-btn" title="Back to camera">&#x2190; Camera</button>
+      <h2>Gallery</h2>
+      <div class="spacer"></div>
+      <button id="select-all-btn">Select All</button>
+      <button id="deselect-btn">Deselect</button>
+      <button id="download-btn">Download</button>
+      <button id="delete-btn">Delete</button>
+    </div>
+    <div class="gallery-tabs" id="gallery-tabs"></div>
+    <div class="gallery-grid"></div>
+    <div class="gallery-footer">
+      <span class="gallery-count"></span>
+      <span class="gallery-selection-count"></span>
+      <span class="gallery-status"></span>
+    </div>
+  </div>
+
+  <div id="toast" hidden></div>
+
+  <!-- Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
+
+  <!-- App -->
+  <script src="config.js"></script>
+  <script src="camera.js"></script>
+  <script src="storage.js"></script>
+  <script src="gallery.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
